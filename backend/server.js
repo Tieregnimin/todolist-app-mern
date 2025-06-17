@@ -15,10 +15,21 @@ connectDB();
 
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://todolist-app-mern.vercel.app',
+  'https://todolist-app-mern-git-main-tieregnimins-projects.vercel.app' // pour les previews
+];
 // Middleware CORS (doit venir avant les routes)
 app.use(cors({
-  origin: 'http://localhost:5173', // Frontend URL
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // ← AJOUTE PATCH ici
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   credentials: true
 }));
 
