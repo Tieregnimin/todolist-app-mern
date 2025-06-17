@@ -15,12 +15,20 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
 
-  // 🔍 États pour le filtrage
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [dueDateFilter, setDueDateFilter] = useState("");
 
+  // 🧠 Rediriger si non connecté
+  useEffect(() => {
+    if (!authLoading && !user) {
+  navigate("/login"); // redirige si pas connecté
+  return null;
+}
+  }, [authLoading, user, navigate]);
+
+  // 📥 Charger les tâches une fois connecté
   useEffect(() => {
     if (authLoading || !user) return;
 
@@ -52,7 +60,7 @@ function Dashboard() {
 
   const onDeleteTask = async (id) => {
     try {
-      await api.delete(`/api/tasks/${id}`, { withCredentials: true });
+      await api.delete(`/api/tasks/${id}`);
       setTasks((tasks) => tasks.filter((t) => t._id !== id));
       toast.success("Tâche supprimée !");
     } catch {
@@ -62,11 +70,9 @@ function Dashboard() {
 
   const onToggleComplete = async (task) => {
     try {
-      const res = await api.patch(
-        `/api/tasks/${task._id}`,
-        { completed: !task.completed },
-        { withCredentials: true }
-      );
+      const res = await api.patch(`/api/tasks/${task._id}`, {
+        completed: !task.completed,
+      });
       setTasks((tasks) =>
         tasks.map((t) => (t._id === task._id ? res.data : t))
       );
@@ -77,11 +83,9 @@ function Dashboard() {
 
   const onUpdateProgress = async (id, progress) => {
     try {
-      const res = await api.patch(
-        `/api/tasks/${id}`,
-        { progress: parseInt(progress) },
-        { withCredentials: true }
-      );
+      const res = await api.patch(`/api/tasks/${id}`, {
+        progress: parseInt(progress),
+      });
       setTasks((tasks) =>
         tasks.map((t) => (t._id === id ? res.data : t))
       );
