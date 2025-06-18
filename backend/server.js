@@ -15,24 +15,18 @@ connectDB();
 
 const app = express();
 
-// ✅ Liste des origines autorisées (localhost + Vercel prod + preview)
+// Remplace ce domaine par l'URL exacte de ton frontend Vercel
 const allowedOrigins = [
-  'http://localhost:5173',
-  'https://todolist-app-mern.vercel.app',
-  'https://todolist-app-mern-git-main-tieregnimins-projects.vercel.app'
+  "https://todolist-app-mern.vercel.app", // ✅ frontend en prod
+  "http://localhost:5000"                 // ✅ pour le dev local
 ];
 
-// ✅ Middleware CORS
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true, // permet l'envoi de cookies
-}));
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true, // ✅ autorise les cookies (token)
+  })
+);
 
 // ✅ Middlewares utiles
 app.use(express.json());
