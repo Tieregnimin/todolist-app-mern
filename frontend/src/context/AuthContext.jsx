@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import api from "../api/axios"; // ✅ instance axios centralisée
+import api from "../api/axios";
 
 const AuthContext = createContext();
 
@@ -8,10 +8,13 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Connexion
   const login = async (email, password) => {
     try {
-      const res = await api.post("/api/auth/login", { email, password });
+      const res = await api.post(
+        "/api/auth/login",
+        { email, password },
+        { withCredentials: true }
+      );
       setUser(res.data.user);
       return { success: true };
     } catch (err) {
@@ -22,14 +25,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Inscription
   const register = async (username, email, password) => {
     try {
-      const res = await api.post("/api/auth/register", {
-        username,
-        email,
-        password,
-      });
+      const res = await api.post(
+        "/api/auth/register",
+        { username, email, password },
+        { withCredentials: true }
+      );
       setUser(res.data.user);
       toast.success("Inscription réussie !");
       return { success: true };
@@ -39,10 +41,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Déconnexion
   const logout = async () => {
     try {
-      await api.post("/api/auth/logout");
+      await api.post("/api/auth/logout", {}, { withCredentials: true });
       setUser(null);
       toast("Déconnexion réussie", { icon: "👋" });
     } catch {
@@ -50,15 +51,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Vérifie l'utilisateur connecté au démarrage
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await api.get("/api/auth/me");
+        const res = await api.get("/api/auth/me", { withCredentials: true });
         setUser(res.data);
       } catch (err) {
         if (err.response?.status === 401) {
-          // Pas connecté => on ignore proprement
           setUser(null);
         } else {
           console.error("Erreur AuthContext :", err);
@@ -84,3 +83,4 @@ export const useAuth = () => {
   }
   return context;
 };
+export default AuthContext;
