@@ -35,7 +35,7 @@ function Dashboard() {
     const fetchTasks = async () => {
       setLoading(true);
       try {
-        const res = await api.get("/api/tasks");
+        const res = await api.get("https://todolist-app-mern-ke15.onrender.com/tasks");
         setTasks(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         toast.error("Erreur lors du chargement des tâches");
@@ -60,7 +60,7 @@ function Dashboard() {
 
   const onDeleteTask = async (id) => {
     try {
-      await api.delete(`/api/tasks/${id}`);
+      await api.delete(`/tasks/${id}`);
       setTasks((tasks) => tasks.filter((t) => t._id !== id));
       toast.success("Tâche supprimée !");
     } catch {
@@ -70,7 +70,7 @@ function Dashboard() {
 
   const onToggleComplete = async (task) => {
     try {
-      const res = await api.patch(`/api/tasks/${task._id}`, {
+      const res = await api.patch(`/tasks/${task._id}`, {
         completed: !task.completed,
       });
       setTasks((tasks) =>
@@ -83,7 +83,7 @@ function Dashboard() {
 
   const onUpdateProgress = async (id, progress) => {
     try {
-      const res = await api.patch(`/api/tasks/${id}`, {
+      const res = await api.patch(`/tasks/${id}`, {
         progress: parseInt(progress),
       });
       setTasks((tasks) =>
