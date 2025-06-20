@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 
 function Login() {
-  const { login, user } = useAuth(); // utilise bien le contexte
+  const { login, user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
