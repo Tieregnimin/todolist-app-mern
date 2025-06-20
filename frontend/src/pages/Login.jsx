@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 
 function Login() {
-  const { user, login } = useAuth();
+  const { login, user } = useAuth(); // utilise bien le contexte
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -24,12 +24,9 @@ function Login() {
 
     const result = await login(email, password);
 
-    if (result.success) {
-      navigate("/dashboard");
-    } else {
+    if (!result.success) {
       setMessage(result.message);
     }
-
     setLoading(false);
   };
 

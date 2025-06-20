@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const res = await api.get("/api/auth/me");
         setUser(res.data);
-      } catch {
+      } catch (err) {
         setUser(null);
       } finally {
         setLoading(false);
@@ -26,31 +26,35 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      await api.post("/api/auth/login", { email, password });
-      // Récupère les infos utilisateur après connexion
-      const res = await api.get("/api/auth/me");
+      const res = await api.post("/api/auth/login", { email, password });
       setUser(res.data);
       toast.success("Connexion réussie !");
       return { success: true };
     } catch (err) {
-      const message = err.response?.data?.message || "Erreur lors de la connexion";
-      toast.error(message);
-      return { success: false, message };
+      return {
+        success: false,
+        message:
+          err.response?.data?.message || "Erreur lors de la connexion",
+      };
     }
   };
 
   const register = async (username, email, password) => {
     try {
-      await api.post("/api/auth/register", { username, email, password });
-      // Récupère les infos utilisateur après inscription
-      const res = await api.get("/api/auth/me");
+      const res = await api.post("/api/auth/register", {
+        username,
+        email,
+        password,
+      });
       setUser(res.data);
       toast.success("Inscription réussie !");
       return { success: true };
     } catch (err) {
-      const message = err.response?.data?.message || "Erreur lors de l'inscription";
-      toast.error(message);
-      return { success: false, message };
+      return {
+        success: false,
+        message:
+          err.response?.data?.message || "Erreur lors de l'inscription",
+      };
     }
   };
 
@@ -59,7 +63,7 @@ export const AuthProvider = ({ children }) => {
       await api.post("/api/auth/logout");
       setUser(null);
       toast.success("Déconnexion réussie !");
-    } catch {
+    } catch (err) {
       toast.error("Erreur lors de la déconnexion");
     }
   };
@@ -72,5 +76,3 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
-
-export default AuthContext;
