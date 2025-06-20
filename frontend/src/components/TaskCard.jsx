@@ -6,7 +6,7 @@ function TaskCard({ task, onEdit, onDelete, onToggleComplete, onUpdateProgress, 
 
   const handleDelete = () => {
     if (window.confirm(`Supprimer la tâche "${task.title || "sans titre"}" ?`)) {
-      onDelete(task._id, task.title);
+      onDelete(task._id);
     }
   };
 
@@ -37,6 +37,7 @@ function TaskCard({ task, onEdit, onDelete, onToggleComplete, onUpdateProgress, 
         task.completed ? "opacity-70" : ""
       }`}
     >
+      {/* ✅ Titre + Checkbox */}
       <div className="flex items-center justify-between w-full">
         <label className="flex items-center gap-2 w-full cursor-pointer">
           <input
@@ -46,13 +47,23 @@ function TaskCard({ task, onEdit, onDelete, onToggleComplete, onUpdateProgress, 
             className="w-5 h-5 accent-blue-600"
             aria-label={`Marquer "${task.title || "sans titre"}" comme terminée`}
           />
+          <div className="flex flex-col flex-1">
           <span
-            className={`text-lg select-none flex-1 ${
-              task.completed ? "line-through text-gray-400" : "text-gray-800"
+            className={`text-lg select-none ${
+            task.completed ? "line-through text-gray-400" : "text-gray-800"
             }`}
           >
             {task.title || <span className="italic text-gray-400">Sans titre</span>}
           </span>
+
+          {/* Description facultative */}
+            {task.description && (
+          <p className="text-sm mt-1 text-gray-600 italic break-words">
+            {task.description}
+          </p>
+            )}
+          </div>
+
           <AnimatePresence>
             {task.completed && (
               <motion.span
@@ -70,7 +81,14 @@ function TaskCard({ task, onEdit, onDelete, onToggleComplete, onUpdateProgress, 
         </label>
       </div>
 
-      {/* Badge de priorité */}
+      {/* ✅ Description (si présente) */}
+      {task.description && (
+        <p className="text-sm text-gray-700 mt-2 whitespace-pre-line">
+          {task.description}
+        </p>
+      )}
+
+      {/* ✅ Badge de priorité */}
       <div className="mt-2">
         <span
           className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${getPriorityColor(
@@ -81,6 +99,7 @@ function TaskCard({ task, onEdit, onDelete, onToggleComplete, onUpdateProgress, 
         </span>
       </div>
 
+      {/* ✅ Barre de progression */}
       <div className="w-full mt-4">
         <input
           type="range"
@@ -96,6 +115,7 @@ function TaskCard({ task, onEdit, onDelete, onToggleComplete, onUpdateProgress, 
         </p>
       </div>
 
+      {/* ✅ Boutons Action */}
       <div className="flex gap-2 mt-4 justify-end">
         {onEdit && (
           <button

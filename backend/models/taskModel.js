@@ -19,13 +19,13 @@ const taskSchema = new mongoose.Schema(
       ref: 'User',
     },
     priority: {
-    type: String,
-    enum: ['faible', 'moyenne', 'haute'],
-    default: 'moyenne',
+      type: String,
+      enum: ['faible', 'moyenne', 'haute'],
+      default: 'moyenne',
     },
     dueDate: {
       type: Date,
-      default: null, // optionnel, pas forcément requis
+      default: null,
     },
     progress: {
       type: Number,
@@ -33,9 +33,15 @@ const taskSchema = new mongoose.Schema(
       min: [0, 'La progression ne peut pas être inférieure à 0'],
       max: [100, 'La progression ne peut pas être supérieure à 100'],
     },
+    description: {
+      type: String,
+      default: '',
+      trim: true,
+      maxlength: [1000, 'La description ne peut pas dépasser 1000 caractères'],
+    },
   },
   {
-    timestamps: true, // createdAt et updatedAt
+    timestamps: true,
   }
 );
 

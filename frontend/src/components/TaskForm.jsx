@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../api/axios';
 import { toast } from 'react-hot-toast';
 import { FaPlus } from 'react-icons/fa';
 
 function TaskForm({ onAddTask, onUpdateTask, taskToEdit = null, clearEdit }) {
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [progress, setProgress] = useState(0);
   const [priority, setPriority] = useState('moyenne');
@@ -13,10 +14,10 @@ function TaskForm({ onAddTask, onUpdateTask, taskToEdit = null, clearEdit }) {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  // Remplir les champs si on édite une tâche
   useEffect(() => {
     if (taskToEdit) {
       setTitle(taskToEdit.title || '');
+      setDescription(taskToEdit.description || '');
       setDueDate(taskToEdit.dueDate?.split('T')[0] || '');
       setProgress(taskToEdit.progress || 0);
       setPriority(taskToEdit.priority || 'moyenne');
@@ -26,6 +27,7 @@ function TaskForm({ onAddTask, onUpdateTask, taskToEdit = null, clearEdit }) {
 
   const resetForm = () => {
     setTitle('');
+    setDescription('');
     setDueDate('');
     setProgress(0);
     setPriority('moyenne');
@@ -37,6 +39,7 @@ function TaskForm({ onAddTask, onUpdateTask, taskToEdit = null, clearEdit }) {
 
     const taskData = {
       title: title.trim(),
+      description: description.trim() || '',
       dueDate: dueDate || null,
       progress: parseInt(progress) || 0,
       priority,
@@ -45,28 +48,18 @@ function TaskForm({ onAddTask, onUpdateTask, taskToEdit = null, clearEdit }) {
     try {
       setLoading(true);
       if (taskToEdit) {
-        // 🛠️ Modifier
-        const res = await axios.patch(
-          `http://localhost:5000/api/tasks/${taskToEdit._id}`,
-          taskData,
-          { withCredentials: true }
-        );
+        const res = await api.patch(`/api/tasks/${taskToEdit._id}`, taskData);
         toast.success('Tâche modifiée !');
-        if (onUpdateTask) onUpdateTask(res.data);
+        onUpdateTask?.(res.data);
       } else {
-        // ➕ Créer
-        const res = await axios.post(
-          'http://localhost:5000/api/tasks',
-          taskData,
-          { withCredentials: true }
-        );
+        const res = await api.post('/api/tasks', taskData);
         toast.success('Tâche ajoutée !');
-        if (onAddTask) onAddTask(res.data);
+        onAddTask?.(res.data);
       }
 
       resetForm();
       setShowModal(false);
-      if (clearEdit) clearEdit();
+      clearEdit?.();
     } catch (err) {
       toast.error(err.response?.data?.message || "Erreur lors de l'enregistrement");
     } finally {
@@ -77,7 +70,7 @@ function TaskForm({ onAddTask, onUpdateTask, taskToEdit = null, clearEdit }) {
   const handleCancel = () => {
     setShowModal(false);
     resetForm();
-    if (clearEdit) clearEdit();
+    clearEdit?.();
   };
 
   if (!user) {
@@ -114,6 +107,14 @@ function TaskForm({ onAddTask, onUpdateTask, taskToEdit = null, clearEdit }) {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              />
+
+              <textarea
+                placeholder="Description de la tâche (facultatif)"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={4}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 resize-none"
               />
 
               <input

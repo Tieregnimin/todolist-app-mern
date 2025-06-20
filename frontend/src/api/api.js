@@ -1,40 +1,39 @@
 // src/api.js
 import api from "../api/axios"; // ✅ instance axios centralisée
 
+const API_BASE_URL = "/api/tasks"; // ✅ Pas de localhost ici (géré par l'instance axios)
 
-const API_BASE_URL = "http://localhost:5000/api/tasks";
-
-// Récupérer toutes les tâches
+// 🔁 Récupérer toutes les tâches
 export const getTasks = async () => {
-  const res = await api.get(API_BASE_URL, { withCredentials: true });
-  return res.data.user;
+  const res = await api.get(API_BASE_URL); // withCredentials déjà configuré dans api.js
+  return res.data;
 };
 
-// Créer une tâche
+// ➕ Créer une tâche
 export const createTask = async (taskData) => {
   try {
-    const res = await api.post(API_BASE_URL, taskData, { withCredentials: true });
-    return res.data.user;
+    const res = await api.post(API_BASE_URL, taskData);
+    return res.data;
   } catch (err) {
     throw err.response?.data || { message: "Erreur lors de la création de la tâche" };
   }
 };
 
-// Mettre à jour une tâche
+// ✏️ Modifier une tâche
 export const updateTask = async (id, updatedData) => {
   try {
-    const res = await api.patch(`${API_BASE_URL}/${id}`, updatedData, { withCredentials: true });
-    return res.data.user;
+    const res = await api.patch(`${API_BASE_URL}/${id}`, updatedData);
+    return res.data;
   } catch (err) {
     throw err.response?.data || { message: "Erreur lors de la modification de la tâche" };
   }
 };
 
-// Supprimer une tâche
+// ❌ Supprimer une tâche
 export const deleteTask = async (id) => {
   try {
-    const res = await api.delete(`${API_BASE_URL}/${id}`, { withCredentials: true });
-    return res.data.user;
+    const res = await api.delete(`${API_BASE_URL}/${id}`);
+    return res.data;
   } catch (err) {
     throw err.response?.data || { message: "Erreur lors de la suppression de la tâche" };
   }

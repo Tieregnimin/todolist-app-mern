@@ -14,17 +14,20 @@ dotenv.config();
 connectDB();
 
 const app = express();
-
-
 const allowedOrigins = [
-  "http://localhost:5173", // ✅ pour dev local
-  "https://todolist-app-mern.vercel.app", // ✅ ton frontend sur Vercel
-  "https://todolist-app-mern-git-main-tieregnimins-projects.vercel.app" // ✅ preview vercel
+  'https://todolist-app-mern.vercel.app',
+  'https://todolist-app-mern-git-main-tieregnimins-projects.vercel.app',
 ];
 
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true, // ✅ important pour que les cookies passent
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
 }));
 
 
@@ -45,7 +48,7 @@ app.get('/api/ping', (req, res) => {
 app.use(errorHandler);
 
 // ✅ Démarrage du serveur
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`✅ Serveur lancé sur http://localhost:${PORT}`);
 });

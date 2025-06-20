@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
@@ -22,22 +22,25 @@ function Register() {
   }, [user, navigate]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await axios.post(
-        "http://localhost:5000/api/auth/register",
-        { username, email, password },
-        { withCredentials: true }
-      );
-      toast.success("Inscription réussie !");
-      setTimeout(() => navigate("/login"), 1500);
-    } catch (err) {
-      setMessage(err.response?.data?.message || "Erreur lors de l'inscription");
-      toast.error(err.response?.data?.message || "Erreur lors de l'inscription");
-    } finally {
-      setLoading(false);
-    }
+  e.preventDefault();
+  setLoading(true);
+  setMessage("");
+
+  try {
+    await api.post("/api/auth/register", {
+      username,
+      email,
+      password,
+    });
+    toast.success("Inscription réussie !");
+    setTimeout(() => navigate("/login"), 1500);
+  } catch (err) {
+    const errorMsg = err.response?.data?.message || "Erreur lors de l'inscription";
+    setMessage(errorMsg);
+    toast.error(errorMsg);
+  } finally {
+    setLoading(false);
+  }
   };
 
   return (
