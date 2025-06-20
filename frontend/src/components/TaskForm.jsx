@@ -48,11 +48,11 @@ function TaskForm({ onAddTask, onUpdateTask, taskToEdit = null, clearEdit }) {
     try {
       setLoading(true);
       if (taskToEdit) {
-        const res = await api.patch(`https://todolist-app-mern-ke15.onrender.com/tasks/${taskToEdit._id}`, taskData);
+        const res = await api.patch(`/tasks/${taskToEdit._id}`, taskData);
         toast.success('Tâche modifiée !');
         onUpdateTask?.(res.data);
       } else {
-        const res = await api.post('https://todolist-app-mern-ke15.onrender.com/tasks', taskData);
+        const res = await api.post('/tasks', taskData);
         toast.success('Tâche ajoutée !');
         onAddTask?.(res.data);
       }

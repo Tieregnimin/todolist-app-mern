@@ -36,11 +36,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ✅ Routes API
-app.use('https://todolist-app-mern-ke15.onrender.com/auth', authRoutes);
-app.use('https://todolist-app-mern-ke15.onrender.com/tasks', taskRoutes);
+app.use('/auth', authRoutes);
+app.use('/tasks', taskRoutes);
 
 // ✅ Route test
-app.get('https://todolist-app-mern-ke15.onrender.com/ping', (req, res) => {
+app.get('/ping', (req, res) => {
   res.send('pong');
 });
 
