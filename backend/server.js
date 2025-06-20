@@ -36,14 +36,19 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ✅ Routes API
-app.use('/auth', authRoutes);
-app.use('/tasks', taskRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // ✅ Route test
-app.get('/ping', (req, res) => {
+app.get('/api/ping', (req, res) => {
   res.send('pong');
 });
 
 // ✅ Middleware global de gestion des erreurs
 app.use(errorHandler);
 
+// ✅ Démarrage du serveur
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => {
+  console.log(`✅ Serveur lancé sur http://localhost:${PORT}`);
+});
