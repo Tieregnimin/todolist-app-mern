@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
-import api from "../api/axios";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { toast } from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 
 function Register() {
-  const { user } = useAuth();
+  const { user, register } = useAuth();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,7 +12,6 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Redirection si déjà connecté
   useEffect(() => {
     if (user) {
       navigate("/dashboard");
@@ -22,25 +19,19 @@ function Register() {
   }, [user, navigate]);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setMessage("");
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
 
-  try {
-    await api.post("/auth/register", {
-      username,
-      email,
-      password,
-    });
-    toast.success("Inscription réussie !");
-    setTimeout(() => navigate("/login"), 1500);
-  } catch (err) {
-    const errorMsg = err.response?.data?.message || "Erreur lors de l'inscription";
-    setMessage(errorMsg);
-    toast.error(errorMsg);
-  } finally {
+    const result = await register(username, email, password);
+
+    if (result.success) {
+      navigate("/dashboard");
+    } else {
+      setMessage(result.message);
+    }
+
     setLoading(false);
-  }
   };
 
   return (
