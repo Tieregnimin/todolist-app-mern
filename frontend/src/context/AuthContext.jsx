@@ -40,13 +40,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (username, email, password) => {
-    try {
-      const res = await api.post("/api/auth/register", {
-        username,
-        email,
-        password,
-      });
-      setUser(res.data);
+  try {
+    await api.post("/api/auth/register", { username, email, password });
+
+    // 👇 Appel immédiat pour récupérer l'utilisateur
+    const res = await api.get("/api/auth/me");
+    setUser(res.data);
       toast.success("Inscription réussie !");
       return { success: true };
     } catch (err) {
