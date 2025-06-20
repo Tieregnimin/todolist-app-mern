@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 
 function Login() {
-  const { login, user } = useAuth();
+  const { user, login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -24,9 +24,12 @@ function Login() {
 
     const result = await login(email, password);
 
-    if (!result.success) {
+    if (result.success) {
+      navigate("/dashboard");
+    } else {
       setMessage(result.message);
     }
+
     setLoading(false);
   };
 
