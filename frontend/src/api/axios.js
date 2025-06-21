@@ -8,4 +8,6 @@ const api = axios.create({
   withCredentials: true, // ✅ important pour cookies cross-domain
 });
 
+console.log("✅ Axios baseURL:", api.defaults.baseURL);
+
 export default api;
