@@ -1,23 +1,23 @@
 // backend/controllers/authController.js
-import generateToken from "../utils/generateToken.js"; // déjà importé
 import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
+import generateToken from '../utils/generateToken.js';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 
 // 🔒 Fonction utilitaire pour générer et envoyer le cookie JWT
-const generateToken = (res, userId) => {
-  const token = jwt.sign({ id: userId }, process.env.JWT_SECRET || "SECRET_KEY", {
-    expiresIn: "7d",
-  });
+// const generateToken = (res, userId) => {
+//   const token = jwt.sign({ id: userId }, process.env.JWT_SECRET || "SECRET_KEY", {
+//     expiresIn: "7d",
+//   });
 
-  res.cookie("jwt", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "None",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
-  });
-};
+//   res.cookie("jwt", token, {
+//     httpOnly: true,
+//     secure: process.env.NODE_ENV === "production",
+//     sameSite: "None",
+//     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
+//   });
+// };
 
 // ✅ Connexion
 export const loginUser = async (req, res) => {
