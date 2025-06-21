@@ -35,7 +35,7 @@ function Dashboard() {
     const fetchTasks = async () => {
       setLoading(true);
       try {
-        const res = await api.get("https://todolist-app-mern-ke15.onrender.com/tasks");
+        const res = await api.get("/tasks");
         setTasks(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         toast.error("Erreur lors du chargement des tâches");

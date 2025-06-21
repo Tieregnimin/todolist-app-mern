@@ -6,10 +6,10 @@ const generateToken = (res, userId) => {
     expiresIn: "7d",
   });
 
-  res.cookie("token", token, {
+  res.cookie("jwt", token, {  // ✅ Changement ici
     httpOnly: true,
-    secure: true,       // ✅ nécessaire pour Render en HTTPS
-    sameSite: "None",   // ✅ autorise Vercel ↔ Render (cross-site)
+    secure: true,       // ✅ requis pour Render
+    sameSite: "None",   // ✅ autorise Vercel <-> Render
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
   });
 };

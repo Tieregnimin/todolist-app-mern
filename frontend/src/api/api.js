@@ -1,7 +1,7 @@
 // src/api.js
 import api from "../api/axios"; // ✅ instance axios centralisée
 
-const API_BASE_URL = "/tasks"; // ✅ Pas de localhost ici (géré par l'instance axios)
+const API_BASE_URL = "/api/tasks"; // ✅ Pas de localhost ici (géré par l'instance axios)
 
 // 🔁 Récupérer toutes les tâches
 export const getTasks = async () => {

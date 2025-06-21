@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';
 
 export const protect = async (req, res, next) => {
-  const token = req.cookies?.token;
+  const token = req.cookies?.jwt; // ✅ DOIT correspondre au nom du cookie utilisé
 
   if (!token) {
     return res.status(401).json({ error: "Non autorisé : aucun token" });
