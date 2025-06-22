@@ -1,12 +1,12 @@
 // backend/controllers/taskController.js
 import asyncHandler from 'express-async-handler';
-import Task from '../models/taskModel.js';
+import taskModel from '../models/taskModel.js';
 
 // @desc    Obtenir toutes les tâches
 // @route   GET /api/tasks
 // @access  Privé
 export const getTasks = asyncHandler(async (req, res) => {
-  const tasks = await Task.find({ userId: req.user.id }).sort({ createdAt: -1 });
+  const tasks = await taskModel.find({ userId: req.user.id }).sort({ createdAt: -1 });
   res.status(200).json(tasks);
 });
 
@@ -21,7 +21,7 @@ export const createTask = asyncHandler(async (req, res) => {
     throw new Error('Le titre est requis');
   }
 
-  const task = await Task.create({
+  const task = await taskModel.create({
     title: title.trim(),
     completed: typeof completed === 'boolean' ? completed : false,
     priority: priority || 'moyenne',
@@ -38,7 +38,7 @@ export const createTask = asyncHandler(async (req, res) => {
 // @route   PATCH /api/tasks/:id
 // @access  Privé
 export const updateTask = asyncHandler(async (req, res) => {
-  const task = await Task.findOne({ _id: req.params.id, userId: req.user.id });
+  const task = await taskModel.findOne({ _id: req.params.id, userId: req.user.id });
 
   if (!task) {
     res.status(404);
@@ -62,7 +62,7 @@ export const updateTask = asyncHandler(async (req, res) => {
 // @route   DELETE /api/tasks/:id
 // @access  Privé
 export const deleteTask = asyncHandler(async (req, res) => {
-  const task = await Task.findOneAndDelete({
+  const task = await taskModel.findOneAndDelete({
     _id: req.params.id,
     userId: req.user.id,
   });

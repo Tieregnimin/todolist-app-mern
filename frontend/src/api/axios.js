@@ -1,9 +1,9 @@
 // frontend/api/axios.js
-import axios from "axios";
+import api from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL; // fallback local
 
-const api = axios.create({
+const api = api.create({
   baseURL: API_URL,
   withCredentials: true, // ✅ important pour cookies cross-domain
 });
