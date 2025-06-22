@@ -11,7 +11,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://todolist-app-mern-ke15.onrender.com/api',
+        target: 'https://todolist-app-mern-ke15.onrender.com',
         rewrite: (path) => path.replace(/^\/api/, ''),
         changeOrigin: true,
         secure: false,
