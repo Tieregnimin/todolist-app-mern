@@ -1,5 +1,5 @@
 // frontend/api/axios.js
-import api from "axios";
+import api from "../api/axios";
 
 const API_URL = import.meta.env.VITE_API_URL; // fallback local
 
